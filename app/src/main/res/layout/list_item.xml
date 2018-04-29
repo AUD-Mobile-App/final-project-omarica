@@ -3,13 +3,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+              android:layout_height="90dp"
               android:orientation="vertical">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:app="http://schemas.android.com/apk/res-auto"
                   android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
+                  android:layout_height="90dp"
+                  android:descendantFocusability="blocksDescendants"
                   android:orientation="horizontal">
 
         <View
@@ -18,34 +19,48 @@
             android:layout_height="match_parent"
             />
 
-        <CheckBox
-
-
-            android:id="@+id/itemCheckbox"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text=""
-            android:textSize="15sp"/>
+            android:layout_weight="2"
+
+            android:gravity="center">
+
+            <CheckBox
+
+
+                android:id="@+id/itemCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+
+                />
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/itemTextView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="6"
             android:gravity="center_vertical"
             android:paddingLeft="5dp"
             android:text="TextView"
             android:textSize="22sp"/>
 
-        <ImageView
-            android:id="@+id/itemImageView"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_margin="5dp"
+        <TextView
+
+            android:id="@+id/itemDateTextView"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
-            android:scaleType="centerInside"
-            app:srcCompat="@mipmap/ic_launcher"/>
+            android:gravity="center"
+            android:text="4-4-2018"
+            android:textSize="13sp"/>
 
     </LinearLayout>
 </LinearLayout>

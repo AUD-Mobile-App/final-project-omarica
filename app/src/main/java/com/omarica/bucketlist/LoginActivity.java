@@ -19,37 +19,50 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
+
+    // Defining the Fields
     private static final String TAG = "EMAIL_PW";
     private EditText mEmailField;
     private EditText mPasswordField;
     private FirebaseAuth mAuth;
-    private Button loginButton;
+    private Button loginButton,registerButton;
     private ProgressBar mProgressBar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        // Initializing the fields
         setContentView(R.layout.activity_login);
         mEmailField = findViewById(R.id.emailEditText);
         mPasswordField = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
+        registerButton = findViewById(R.id.registerButton);
         mAuth = FirebaseAuth.getInstance();
-
-        /*
-        if(mAuth.getCurrentUser()!=null){
-            Intent intent = new Intent(LoginActivity.this, ListActivity.class);
-            startActivity(intent);
-        } */
         mProgressBar =  (ProgressBar)findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.INVISIBLE);
 
+
+        // Handling register
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //Handling login
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 loginButton.setVisibility(View.INVISIBLE);
                 mProgressBar.setVisibility(View.VISIBLE);
+
+                // Validating input and updating UI
                 if(!mEmailField.getText().toString().equals("") && !mPasswordField.getText().toString().equals("") ) {
                     loginUser(mEmailField.getText().toString(), mPasswordField.getText().toString());
                 }
@@ -66,6 +79,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginUser(String email, String password) {
 
+
+        // Logging in using Firebase Authentication
         Log.d(TAG, "signIn:" + email);
 
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -91,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                     mProgressBar.setVisibility(View.INVISIBLE); */
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.getException());
-                    Toast.makeText(LoginActivity.this, "Authentication failed.",
+                    Toast.makeText(LoginActivity.this, "Login Failed. Please check you email and password",
                             Toast.LENGTH_SHORT).show();
                     //updateUI(null);
                 }
@@ -108,5 +123,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        // Check if a user is currently signed in, if so, go to List Activity
+        if(mAuth.getCurrentUser() != null ){
+            Intent intent = new Intent(LoginActivity.this, ListActivity.class);
+            startActivity(intent);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.omarica.bucketlist;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -28,9 +29,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class AddItemActivity extends FragmentActivity implements OnMapReadyCallback {
 
+
+    // Defining the fields
     EditText nameEditText, descriptionEditText;
     Button addButton;
     Calendar calendar;
@@ -38,7 +42,7 @@ public class AddItemActivity extends FragmentActivity implements OnMapReadyCallb
     TextView dueDateTextView;
     LatLng position;
     Toolbar mToolbar;
-    Marker marker;
+
     DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
@@ -46,7 +50,6 @@ public class AddItemActivity extends FragmentActivity implements OnMapReadyCallb
             calendar.set(Calendar.MONTH, i1);
             calendar.set(Calendar.DAY_OF_MONTH, i2);
             dueDateTextView.setText("Due Date: " + dateFormat.format(calendar.getTime()));
-
         }
     };
     private FirebaseDatabase database;
@@ -58,19 +61,30 @@ public class AddItemActivity extends FragmentActivity implements OnMapReadyCallb
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+
+        //Going back to previous activity
         int id = item.getItemId();
         if (id == android.R.id.home) {
             this.finish();
         }
+        // Logging out
+        if (id == R.id.log_out) {
+
+            mAuth.signOut();
+            finish();
+            Intent intent = new Intent(AddItemActivity.this,LoginActivity.class);
+            startActivity(intent);
+
+        }
         return super.onOptionsItemSelected(item);
     }
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
 
+        // Initializing the fields
         nameEditText = findViewById(R.id.itemNameEditText);
         descriptionEditText = findViewById(R.id.itemDescriptionEditText);
         addButton = findViewById(R.id.addButton);
@@ -95,8 +109,11 @@ public class AddItemActivity extends FragmentActivity implements OnMapReadyCallb
         calendar = Calendar.getInstance();
         dateFormat = DateFormat.getDateInstance();
 
+
+        // Pushing a new reference to firebase
         myRef = database.getReference("users").child(user.getUid()).push();
 
+        // Displaying a Date Picker Dialog
         dueDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,6 +122,8 @@ public class AddItemActivity extends FragmentActivity implements OnMapReadyCallb
             }
         });
 
+
+        //Adding a new item to firebase
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,7 +135,7 @@ public class AddItemActivity extends FragmentActivity implements OnMapReadyCallb
                     myRef.child("status").setValue(false);
                     myRef.child("location").setValue(position.latitude + "," + position.longitude);
                     myRef.child("imgUrl").setValue("https://cdn.onlinewebfonts.com/svg/img_255634.png");
-                    myRef.child("dueDate").setValue(dateFormat.format(calendar.getTime()));
+                    myRef.child("dueDate").setValue(calendar.getTimeInMillis());
                     finish();
                 } else {
                     Toast.makeText(AddItemActivity.this, "Please enter the item's information", Toast.LENGTH_SHORT).show();
@@ -132,6 +151,8 @@ public class AddItemActivity extends FragmentActivity implements OnMapReadyCallb
 
         mMap = googleMap;
 
+
+        //Listening to drag events
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
@@ -150,7 +171,7 @@ public class AddItemActivity extends FragmentActivity implements OnMapReadyCallb
             }
         });
 
-        // Add a marker in Sydney, Australia, and move the camera.
+        //Default location to aud
         LatLng aud = new LatLng(25.0912, 55.1561);
         mMap.addMarker(new MarkerOptions().position(aud).title("Selected Location")).setDraggable(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(aud, 10));

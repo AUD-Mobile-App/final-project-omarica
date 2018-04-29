@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -21,15 +23,20 @@
         </activity>
         <activity android:name=".ListActivity">
         </activity>
-        <activity android:name=".AddItemActivity">
+        <activity android:name=".AddItemActivity"
+                  android:windowSoftInputMode="stateHidden">
         </activity>
-        <activity android:name=".RegisterActivity">
+        <activity android:name=".RegisterActivity"
+            android:screenOrientation="portrait">
         </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBI8GqCAJGf0yCNwLsv0xipNyJ_HV57egc"/>
 
+        <activity android:name=".ItemInfoActivity"
+                  android:windowSoftInputMode="stateHidden">
+        </activity>
     </application>
 
 </manifest>
